@@ -19,7 +19,7 @@ class Database:
             cur = conn.cursor()
 
             # Create table
-            cur.execute("""CREATE TABLE IF NOT EXISTS SCORES(last_name TEXT PRIMARY KEY, first_name TEXT, score REAL);""")
+            cur.execute("""CREATE TABLE IF NOT EXISTS SCORES(id PRIMARY KEY, last_name TEXT, first_name TEXT, score REAL);""")
 
             # Save (commit) the changes
             conn.commit()
@@ -50,7 +50,7 @@ class Database:
             #if user doesn't have a previous score, add them to the database
             if old_score == None:
                 # Insert a row of data
-                sql = f'''INSERT INTO SCORES VALUES ('{lname}', '{fname}', 1)'''
+                sql = f'''INSERT INTO SCORES VALUES (null, '{lname}', '{fname}', 1)'''
                 cur.execute(sql)
 
                 # Save (commit) the changes
@@ -94,8 +94,8 @@ class Database:
             for row in rows:
                 #create temporary dictionary to hold values for a single player
                 temp = dict()
-                temp['name'] = row[1] + " " + row[0]
-                temp['score'] = row[2]
+                temp['name'] = row[2] + " " + row[1]
+                temp['score'] = row[3]
 
                 #add dictionary to list
                 scores.append(temp)

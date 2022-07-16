@@ -1,4 +1,4 @@
-#import libraries
+#import libraries and database class
 from time import sleep
 from db import Database
 
@@ -139,9 +139,12 @@ class Game:
         if self.score1 > self.score2:
             print(f'{self.p1_firstName} wins the game!')
             self.win = 1
-        else:
+        elif self.score2 > self.score1:
             print(f'{self.p2_firstName} wins the game!')
             self.win = 2
+        else:
+            print('Nobody won this game. It\'s a tie!')
+            self.win = 0
 
     def print_topfive(self, topfive):
         """
@@ -162,18 +165,19 @@ class Game:
 
 
     def gameover(self):
-        if self.win == 1:
-            lastName = self.p1_lastName
-            firstName = self.p1_firstName
-        else:
-            lastName = self.p2_lastName
-            firstName = self.p2_firstName
+        if self.win != 0:
+            if self.win == 1:
+                lastName = self.p1_lastName
+                firstName = self.p1_firstName
+            else:
+                lastName = self.p2_lastName
+                firstName = self.p2_firstName
 
-        #create table in database
-        self.db.create_table(self.db_name)
+            #create table in database
+            self.db.create_table(self.db_name)
 
-        #add or update score
-        self.db.add_score(firstName, lastName, self.db_name)
+            #add or update score
+            self.db.add_score(firstName, lastName, self.db_name)
 
         #get top five from database and plug it into columns
         top_five = self.db.get_scoreboard(self.db_name)
@@ -185,7 +189,11 @@ class Game:
         
         choice = int(input("> "))
         if choice == 1:
+            self.score1 = 0
+            self.score2 = 0
+            self.win = 0
             self.main()
+            
         elif choice ==2:
             print('Please enter your information to delete your account.')
             firstName = input('First Name: ')
